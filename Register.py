@@ -1,10 +1,14 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+# from flask_sqlalchemy import
 from flask_restless import *
-import sqlite3
+import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://localhost/register'
+
+DB_PATH = 'sqlite:///' + os.path.dirname(os.path.abspath(__file__)) + '/register.db'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = DB_PATH  # 'sqlite:////tmp/register.db'
 db = SQLAlchemy(app)
 
 authors = db.Table('authors',
@@ -43,9 +47,13 @@ def hello_world():
 
 if __name__ == '__main__':
 
-    db.create_all()
-    # mr_manager = APIManager(app, flask_sqlalchemy_db=db)
+    # db.create_all()
+    mr_manager = APIManager(app, flask_sqlalchemy_db=db)
     #
-    # mr_manager.create_api(Category, methods=['GET', 'POST'])
-    # mr_manager.create_api(Author,)
+    mr_manager.create_api(Category, methods=['GET', 'POST'])
+    # # mr_manager.create_api(Author,)
+    # c = Category(name='Medical Expertise')
+    # db.session.add(c)
+    # db.session.commit()
     app.run()
+    # print(DB_PATH)
