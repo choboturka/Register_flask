@@ -1,7 +1,9 @@
 from flask import Flask
+from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
-# from flask_sqlalchemy import
 from flask_restless import *
+
+
 import os
 
 app = Flask(__name__)
@@ -15,7 +17,6 @@ authors = db.Table('authors',
                    db.Column('author_id', db.Integer, db.ForeignKey('author.id')),
                    db.Column('method_id', db.Integer, db.ForeignKey('method.id'))
                    )
-
 
 class Method(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -42,18 +43,16 @@ class Category(db.Model):
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return render_template('Index.html')
 
 
 if __name__ == '__main__':
 
-    # db.create_all()
     mr_manager = APIManager(app, flask_sqlalchemy_db=db)
-    #
-    mr_manager.create_api(Category, methods=['GET', 'POST'])
-    # # mr_manager.create_api(Author,)
-    # c = Category(name='Medical Expertise')
-    # db.session.add(c)
-    # db.session.commit()
+    mr_manager.create_api(Category, methods=['GET', 'POST'], exclude_columns=['methods'])
+    mr_manager.create_api(Author, methods=['GET', 'POST'], include_columns=['id', 'name', 'methods', 'methods.name'])
+    mr_manager.create_api(Method, methods=['GET', 'POST', 'PATCH', 'DELETE'],
+                          include_columns=['id', 'name', 'authors', 'authors.name', 'category', 'category.name',
+                                           'creation_date', 'approval_date'])
     app.run()
     # print(DB_PATH)
