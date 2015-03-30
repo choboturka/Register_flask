@@ -7,7 +7,7 @@ from flask_restless import *
 import os
 
 app = Flask(__name__)
-
+#app.config.update(SERVER_NAME='localhost:5010')
 DB_PATH = 'sqlite:///' + os.path.dirname(os.path.abspath(__file__)) + '/register.db'
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DB_PATH  # 'sqlite:////tmp/register.db'
@@ -54,5 +54,5 @@ if __name__ == '__main__':
     mr_manager.create_api(Method, methods=['GET', 'POST', 'PATCH', 'DELETE'],
                           include_columns=['id', 'name', 'authors', 'authors.name', 'category', 'category.name',
                                            'creation_date', 'approval_date'])
-    app.run()
+    app.run(host='127.0.0.1', port=5010)
     # print(DB_PATH)
