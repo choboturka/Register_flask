@@ -2,8 +2,6 @@ from flask import Flask
 from flask import render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_restless import *
-
-
 import os
 
 app = Flask(__name__)
@@ -42,17 +40,17 @@ class Category(db.Model):
                               lazy='dynamic')
 
 @app.route('/')
-def hello_world():
+def index():
     return render_template('Index.html')
 
 
 if __name__ == '__main__':
 
     mr_manager = APIManager(app, flask_sqlalchemy_db=db)
-    mr_manager.create_api(Category, methods=['GET', 'POST'], exclude_columns=['methods'])
-    mr_manager.create_api(Author, methods=['GET', 'POST'], include_columns=['id', 'name', 'methods', 'methods.name'])
-    mr_manager.create_api(Method, methods=['GET', 'POST', 'PATCH', 'DELETE'],
-                          include_columns=['id', 'name', 'authors', 'authors.name', 'category', 'category.name',
-                                           'creation_date', 'approval_date'])
+    mr_manager.create_api(Category, methods=['GET', 'POST'])# , exclude_columns=['methods'])
+    mr_manager.create_api(Author, methods=['GET', 'POST'])# , include_columns=['id', 'name', 'methods', 'methods.name'])
+    mr_manager.create_api(Method, methods=['GET', 'POST', 'PATCH', 'DELETE'])#,
+                          # include_columns=['id', 'name', 'authors', 'authors.name', 'category', 'category.name',
+                          #                  'creation_date', 'approval_date'])
     app.run(host='127.0.0.1', port=5010)
     # print(DB_PATH)
